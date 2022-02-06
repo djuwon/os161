@@ -17,6 +17,9 @@
 #include <syscall.h>
 #include <version.h>
 
+/* not sure why my changes to the main.c file disappeared but my David Jung was here */
+
+
 /*
  * These two pieces of data are maintained by the makefiles and build system.
  * buildconfig is the name of the config file the kernel was configured with.
@@ -69,17 +72,35 @@ boot(void)
 	kprintf("Put-your-group-name-here's system version %s (%s #%d)\n", 
 		GROUP_VERSION, buildconfig, buildversion);
 	kprintf("\n");
+	
+	hello();	
 
 	ram_bootstrap();
+		
 	scheduler_bootstrap();
+	
 	thread_bootstrap();
+	DEBUG(DB_THREADS, "Threads bootstrap ran");
 	vfs_bootstrap();
+	DEBUG(DB_VFS, "VFS bootstrap ran");
 	dev_bootstrap();
+	DEBUG(DB_DEVICE, "Dev bootstrap ran");
 	vm_bootstrap();
+	DEBUG(DB_VM, "VM bootstrap ran");
 	kprintf_bootstrap();
 
 	/* Default bootfs - but ignore failure, in case emu0 doesn't exist */
 	vfs_setbootfs("emu0");
+	
+	DEBUG(DB_LOCORE, "David Jung's testcall for LOCORE");
+	DEBUG(DB_INTERRUPT, "David Jung's testcall for INTERRUPT");
+	DEBUG(DB_EXEC, "David Jung's testcall for EXEC");
+	DEBUG(DB_VFS, "David Jung's testcall for VFS");
+	DEBUG(DB_SFS, "David Jung's testcall for SFS");
+	DEBUG(DB_NET, "David Jung's testcall for NET");
+	DEBUG(DB_NETFS, "David Jung's testcallf ro DB_NETFS");
+	DEBUG(DB_KMALLOC, "David Jung's testcall for DB_KMALLOC");	
+
 
 
 	/*
@@ -129,7 +150,7 @@ sys_reboot(int code)
 	    default:
 		return EINVAL;
 	}
-
+	DEBUG(DB_SYSCALL, "Rebooting syscall in sys_reboot");
 	shutdown();
 
 	switch (code) {
